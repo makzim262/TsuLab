@@ -5,6 +5,6 @@ int main()
 
 cout << "123";
 
-return 1;
+return 0;
 
 }
