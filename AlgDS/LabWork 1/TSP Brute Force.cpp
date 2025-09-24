@@ -17,7 +17,7 @@ int main() {
     cout << "введите количество городов и номер стартового города" << endl;
     cin >> cityAmount >> cityStart;
 
-    if (cityAmount < cityStart || cityStart < 0) {
+    if (cityAmount < cityStart || cityStart < 1) {
         cout << "введен некорректный номер стартового города" << endl;
         return 1;
     }
@@ -61,6 +61,8 @@ int main() {
         
     } while (next_permutation(cities.begin(), cities.end()));
 
+    best_path.push_back(cityStart);
+
     for (int i = 0; i < cityAmount; i++) { 
         for (int j = 0; j < cityAmount; j++) {
             cout << distance[i][j] << " ";
@@ -74,7 +76,7 @@ int main() {
 
     cout << "Кратчайшее расстояние: " << minCost << endl;
     cout << "< ";
-    for (int i = 0; i < cityAmount; i++) {
+    for (int i = 0; i < cityAmount + 1; i++) {
         cout << best_path[i] << " ";
     }
     cout << ">";
