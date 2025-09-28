@@ -46,6 +46,8 @@ int main() {
     for (int i = 0;i < cityAmount; i++) {
         if (i != cityStart-1) unvisited.push_back(i+1);
     }
+    
+    const auto start = chrono::steady_clock::now();
 
     while (!unvisited.empty()) {
         int currMin = INT_MAX;
@@ -67,6 +69,10 @@ int main() {
     
     path.push_back(cityStart);
     pathCost += distance[currCity-1][cityStart-1];
+
+    const auto end = chrono::steady_clock::now();
+    const chrono::duration<double> time = end-start;
+    cout << time.count() << "s" << endl;
 
     cout << pathCost << endl;
     for (int i = 0; i < path.size(); i++) {
