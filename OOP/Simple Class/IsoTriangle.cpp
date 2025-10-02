@@ -13,13 +13,11 @@ void IsoTriangle::input() {
     std::cin >> x_ >> y_;
     std::cout << "Основание треугольника: ";
     std::cin >> base_;
+    if (base_ <= 0) throw std::invalid_argument("Основание должно быть положительным");
     std::cout << "Высота треугольника: ";
     std::cin >> height_;
+    if (height_ <= 0) throw std::invalid_argument("Высота должна быть положительной");
     std::cout << std::endl;
-
-    if (base_ <= 0 || height_ <=0) {
-        throw std::invalid_argument("Основание и высота треугольника должны быть положительными");
-    }
 }
 // 2) вывод
 void IsoTriangle::output() const {
@@ -61,6 +59,28 @@ float IsoTriangle::sideLength() const {
     return sqrt(pow(base_ / 2, 2) + height_ * height_);
 }
 
+// 11) нахождение высоты к боковой стороне
+float IsoTriangle::altToSide() const {
+    return (base_ * height_ / sideLength());
+}
+
+// 12) пересекает ли линия заданая общим уравнением треугольник
+bool IsoTriangle::intersectLine(float a, float b, float c) const {
+    float x1 = x_ + base_ / 2;
+    float y1 = y_;
+
+    float x2 = x_ + base_;
+    float y2 = y_ - height_;
+
+    float x3 = x_;
+    float y3 = y_ - height_;
+
+    float val1 = a*x1 + b*y1 + c;
+    float val2 = a*x2 + b*y2 + c;
+    float val3 = a*x3 + b*y3 + c;
+
+    return (val1 * val2 <= 0 or val1 * val3 <= 0 or val2 * val3 <= 0);
+}
 
 // 8) оператор масштабирования
 IsoTriangle IsoTriangle::operator*(float k) const {
@@ -74,27 +94,46 @@ IsoTriangle& IsoTriangle::operator*=(float k){
     return *this;
 }
 
+// 9) проверка на подобие
+bool IsoTriangle::operator==(const IsoTriangle& other) const {
+    float ratio1 = base_ / height_;
+    float ratio2 = other.base_ / other.height_;
+    return !(ratio1-ratio2);
+}   
 
 
 // проверка методов
 int main() {
 
-    IsoTriangle a;
-    a.input();
-    a.output();
+    IsoTriangle t1;
+    t1.input();
+    t1.output();
 
-    std::cout << "sideLength: "<< a.sideLength() << "\n";
-    std::cout << "inRadius: " << a.inRadius() << "\n";
-    std::cout << "inCenter: (" << a.inCenter().first << ", " << a.inCenter().second << ")" << "\n";
-    std::cout << "largestAngle: " << a.largestAngle() << "\n\n";
+    std::cout << "sideLength: "<< t1.sideLength() << "\n";
+    std::cout << "inRadius: " << t1.inRadius() << "\n";
+    std::cout << "inCenter: (" << t1.inCenter().first << ", " << t1.inCenter().second << ")" << "\n";
+    std::cout << "largestAngle: " << t1.largestAngle() << "\n";
+    std::cout << "altToSide: " << t1.altToSide() << "\n\n";
 
-    a *= 3;
-    a.setX(10);
-    a.setY(10);
+    t1 *= 3;
+    t1.setX(10);
+    t1.setY(10);
 
-    std::cout << "x: " << a.getX() << ", y: " << a.getY() << "\n";
-    std::cout << "base: " << a.getBase() << "\n";
-    std::cout << "height: " << a.getHeight() << "\n";
+    std::cout << "x: " << t1.getX() << ", y: " << t1.getY() << "\n";
+    std::cout << "base: " << t1.getBase() << "\n";
+    std::cout << "height: " << t1.getHeight() << "\n";
+
+    IsoTriangle t2;
+    t2.input();
+
+    if (t1 == t2) std::cout << "true";
+
+    float a, b, c;
+    std::cout << "a, b, c прямой в общем виде: ";
+    std::cin >> a >> b >> c;
+
+    if (t1.intersectLine(a, b, c)) std::cout << "прямая пересекает треугольник";
+    else std::cout << "прямая не пересекает треугольник";
 
     return 0;
 }

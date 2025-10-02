@@ -38,7 +38,10 @@ public:
     std::pair<float, float> inCenter() const;
     float largestAngle() const;
     float sideLength() const;
+    float altToSide() const;
+    bool intersectLine(float a, float b, float c) const;
 
     IsoTriangle operator*(float k) const;
     IsoTriangle& operator*=(float k);
+    bool operator==(const IsoTriangle& other) const;
 };
