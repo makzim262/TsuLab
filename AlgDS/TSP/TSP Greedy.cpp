@@ -11,6 +11,8 @@ int main() {
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<> distrib(1,9);
+
+    const auto start = chrono::steady_clock::now();
     
     int cityAmount;
     int cityStart;
@@ -46,8 +48,6 @@ int main() {
     for (int i = 0;i < cityAmount; i++) {
         if (i != cityStart-1) unvisited.push_back(i+1);
     }
-    
-    const auto start = chrono::steady_clock::now();
 
     while (!unvisited.empty()) {
         int currMin = INT_MAX;
@@ -78,6 +78,6 @@ int main() {
     for (int i = 0; i < path.size(); i++) {
         cout << path[i] << " ";
     }
-    
+
     return 0;
 }

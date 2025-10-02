@@ -11,6 +11,8 @@ int main() {
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<> distrib(1,9);
+
+    const auto start = chrono::steady_clock::now();
     
     int cityAmount;
     int cityStart;
@@ -40,8 +42,6 @@ int main() {
 
     vector<int> best_path;
     int minCost = INT_MAX;
-
-    const auto start = chrono::steady_clock::now();
 
     do {
         vector<int> path;
