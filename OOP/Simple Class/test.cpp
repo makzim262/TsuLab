@@ -25,7 +25,7 @@ int main() {
     IsoTriangle t2;
     t2.input();
 
-    if (t1 == t2) std::cout << "true";
+    if (t1 == t2) std::cout << "true\n";
 
     float a, b, c;
     std::cout << "a, b, c прямой в общем виде: ";
