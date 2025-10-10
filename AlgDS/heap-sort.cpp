@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <fstream>
+#include <chrono>
 
 using namespace std;
 
@@ -40,15 +42,26 @@ bool isSorted(vector<int>& arr) {
 }
 
 int main() {
+    for (int i = 1; i < 10; i++) {
+        string filename = "arr" + to_string(i) + ".txt";
+        ifstream file(filename);
+        vector<int> arr;
+        int num;
 
-    vector<int> heap = {7,5,4,1,9,2,8,3,6};
-    
-    heapSort(heap);
+        while (file >> num) arr.push_back(num);
+        file.close();
 
-    if (isSorted(heap)) cout << "array is sorted\n";
-    else cout << "array is not sorted";
+        auto start = chrono::steady_clock::now();
+        heapSort(arr);
+        auto end = chrono::steady_clock::now();
 
-    for (int i = 0; i < heap.size(); i++) cout << heap[i] << " ";
+        chrono::duration<double> duration = end-start;
 
+        if (isSorted(arr)) {
+            cout << filename << " is sorted\n";
+            cout << duration.count() << "s\n\n";
+        }
+        else cout << filename << " is not sorted\n\n";
+    }
     return 0;
 }
