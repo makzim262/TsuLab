@@ -58,8 +58,10 @@ int main() {
         chrono::duration<double> duration = end-start;
 
         if (isSorted(arr)) {
-            cout << filename << " is sorted\n";
-            cout << duration.count() << "s\n\n";
+            cout << filename << "\n";
+            cout << "size: " << arr.size() << "\n";
+            cout << "range: (" << *min_element(arr.begin(), arr.end()) << " : " << *max_element(arr.begin(), arr.end()) << ")\n";
+            cout << "is sorted in " << duration.count() << "s\n\n";
         }
         else cout << filename << " is not sorted\n\n";
     }
