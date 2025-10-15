@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int tspBruteForce(vector<vector<int>>& distance, int cityAmount, int cityStart) {
+pair<int, int> tspBruteForce(vector<vector<int>>& distance, int cityAmount, int cityStart) {
 
     const auto start = chrono::steady_clock::now();
     
@@ -18,7 +18,9 @@ int tspBruteForce(vector<vector<int>>& distance, int cityAmount, int cityStart) 
     }
 
     vector<int> best_path;
+    vector<int> worst_path;
     int minCost = INT_MAX;
+    int maxCost = INT_MIN;
 
     do {
         vector<int> path;
@@ -35,23 +37,38 @@ int tspBruteForce(vector<vector<int>>& distance, int cityAmount, int cityStart) 
             best_path = path;
             minCost = cost;
         }
+
+        if (cost > maxCost) {
+            worst_path = path;
+            maxCost = cost;
+        }
         
     } while (next_permutation(cities.begin(), cities.end()));
 
     best_path.push_back(cityStart);
+    worst_path.push_back(cityStart);
+
+    cout << "полный перебор: \n";
 
     const auto end = chrono::steady_clock::now();
     const chrono::duration<double> time = end-start;
     cout << time.count() << "s \n";
 
-    cout << "полный перебор: \n";
-    cout << "расстояние: " << minCost << "\n";
+    cout << "лучший путь: " << minCost << "\n";
     cout << "< ";
     for (int i = 0; i < cityAmount + 1; i++) {
         cout << best_path[i] << " ";
     }
-    cout << ">";
-    return 1;
+    cout << ">\n\n";
+
+    cout << "худший путь: " << maxCost << "\n";
+    cout << "< ";
+    for (int i = 0; i < cityAmount + 1; i++) {
+        cout << worst_path[i] << " ";
+    }
+    cout << ">\n\n";
+    
+    return {minCost, maxCost};
 }
 
 int tspGreedy(vector<vector<int>>& distance, int cityAmount, int cityStart) {
@@ -89,30 +106,32 @@ int tspGreedy(vector<vector<int>>& distance, int cityAmount, int cityStart) {
     pathCost += distance[currCity-1][cityStart-1];
 
     cout << "жадный алгоритм: \n";
+
+    const auto end = chrono::steady_clock::now();
+    const chrono::duration<double> time = end-start;
+    cout << time.count() << "s" << "\n";
+
     cout << "расстояние: " << pathCost << "\n";
     cout << "< ";
     for (int i = 0; i < path.size(); i++) {
         cout << path[i] << " ";
     }
-    cout << "> \n";
+    cout << "> \n\n";
 
-    const auto end = chrono::steady_clock::now();
-    const chrono::duration<double> time = end-start;
-    cout << time.count() << "s" << "\n\n";
-
-    return 0;
+    return pathCost;
 }
 
 int main() {
 
     random_device rd;
     mt19937 gen(rd());
-    uniform_int_distribution<> distrib(1,9);
+    uniform_int_distribution<> distrib(1, 9);
     
     int cityAmount;
     int cityStart;
-    cout << "введите количество городов и номер стартового города" << "\n";
+    cout << "введите количество городов и номер стартового города: ";
     cin >> cityAmount >> cityStart;
+    cout << endl;
 
     if (cityAmount < cityStart || cityStart < 1) {
         cout << "введен некорректный номер стартового города" << "\n";
@@ -136,8 +155,12 @@ int main() {
     }
     cout << "\n";
 
-    tspGreedy(distance, cityAmount, cityStart);
-    tspBruteForce(distance, cityAmount, cityStart);
+    int tg = tspGreedy(distance, cityAmount, cityStart);
+    pair<int, int> tbf = tspBruteForce(distance, cityAmount, cityStart);
+
+    int quality = 100 - (100 *(tg - tbf.first) / (tbf.second - tbf.first));
+
+    cout << "качество жадного алгоритма = " <<  quality << "%";
 
     return 0;
 }
